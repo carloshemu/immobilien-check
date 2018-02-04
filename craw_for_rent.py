@@ -7,11 +7,11 @@ reload(sys)
 # sys.setdefaultencoding('utf-8')
 
 
-def process_one_page(url):
+def process_one_page_rent(url):
     req = urllib2.Request(url)
 
-    csvfile = file('munich.csv', 'ab+')
-    writer = csv.writer(csvfile)
+    # csvfile = file('munich.csv', 'ab+')
+    # writer = csv.writer(csvfile)
     response = urllib2.urlopen(req)
     the_page = response.read()
     soup = BeautifulSoup(the_page, 'lxml')
@@ -70,18 +70,18 @@ def process_one_page(url):
 
         data.append(d)
 
-    writer.writerows(data)
-    csvfile.close()
+    # writer.writerows(data)
+    # csvfile.close()
 
 
-for page in range(1, 10):
-    if page == 1:
-        url = "https://www.immobilienscout24.de/Suche/S-T/Wohnung-Miete/Bayern/Muenchen-Kreis"
-    else:
-        url = "https://www.immobilienscout24.de/Suche/S-T/P-%d/Wohnung-Miete/Bayern/Muenchen-Kreis" % page
-
-    process_one_page(url)
-    print "page %d scanned." % page
+# for page in range(1, 10):
+#     if page == 1:
+#         url = "https://www.immobilienscout24.de/Suche/S-T/Wohnung-Miete/Bayern/Muenchen-Kreis"
+#     else:
+#         url = "https://www.immobilienscout24.de/Suche/S-T/P-%d/Wohnung-Miete/Bayern/Muenchen-Kreis" % page
+#
+#     process_one_page_rent(url)
+#     print "page %d scanned." % page
 
 
 
