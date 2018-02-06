@@ -90,10 +90,51 @@ def plot_region_map(df):
     print df["lon"].min(), df["lon"].max()
 
 
-if __name__ == "__main__":
-    df = pd.read_csv("munich_extended.csv", delimiter=",",
-                     header=None,
-                     names=["rent", "area", "rooms", "address",
-                            "region", "lat", "lon", "rent/m2"])
+def plot_region_map_buy(df):
 
-    plot_region_map(df)
+    fig = plt.figure(figsize=(18, 12))
+
+    m = Basemap(llcrnrlat=47.95,
+                llcrnrlon=11.40,
+                urcrnrlat=48.3,
+                urcrnrlon=11.8)
+    m.arcgisimage(dpi=300, xpixels=3000)
+
+    df = df[df.new == 0]
+
+    gp = df.groupby(by="region")
+    region = list(gp.mean().index)
+    lat = list(gp.min()['lat'])
+    lon = list(gp.min()['lon'])
+    pricem2 = list(gp.mean()['price/m2'])
+
+    new_df = pd.DataFrame({"region" : region,
+                           "lat": lat,
+                           "lon": lon,
+                           "price/m2": pricem2})
+
+    for index, row in new_df.iterrows():
+        print row['region']
+        circle = patches.Circle((row['lon'], row['lat']), row['price/m2']/3000000, facecolor='red', linewidth=1)
+        plt.gca().add_patch(circle)
+        plt.gca().text(row['lon'], row['lat'], "%.2f" % row['price/m2'], fontsize=15, color='white')
+
+    plt.tight_layout()
+    plt.savefig("region_map_buy.png")
+
+    print df["lat"].min(), df["lat"].max()
+    print df["lon"].min(), df["lon"].max()
+
+
+if __name__ == "__main__":
+
+
+    # Rent
+    df = pd.read_csv("munich_buy.csv", delimiter=",",
+                     header=None,
+                     names=["price", "area", "rooms", "address", "price/m2",
+                            "region", "lat", "lon", "new"])
+
+    # Buy
+
+    plot_region_map_buy(df)
